@@ -25,5 +25,5 @@ def hello(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", hello),
+    path("", hello), 
 ]
