@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "users",
     "rest_framework",
     "customers",
+    "invoices",
 ]
 
 AUTH_USER_MODEL = "users.User"

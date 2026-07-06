@@ -1,6 +1,13 @@
-from django.urls import path
-from .views import CustomerListCreateAPIView
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path("", CustomerListCreateAPIView.as_view(), name="customer-list-create"),
-]
+from .views import CustomerViewSet
+
+router = DefaultRouter()
+
+router.register(
+    "",
+    CustomerViewSet,
+    basename="customer"
+)
+
+urlpatterns = router.urls
