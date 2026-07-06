@@ -4,7 +4,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import UserListAPIView, RegisterAPIView
+from .views import UserListAPIView, RegisterAPIView, MeAPIView
+
 
 urlpatterns = [
     path("", UserListAPIView.as_view(), name="user-list"),
