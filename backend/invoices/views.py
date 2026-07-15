@@ -1,21 +1,25 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from .models import Invoice
 from .serializers import InvoiceSerializer
 
 from django.http import HttpResponse
-from rest_framework.decorators import action
+
 
 from utils.pdf_generator import (
     generate_invoice_pdf,
 )
 
-from rest_framework.decorators import action
-from rest_framework.response import Response
+
 
 from utils.email_service import send_invoice_email
 from utils.pdf_generator import generate_invoice_pdf
+
+from .models import InvoiceStatus
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     serializer_class = InvoiceSerializer
@@ -60,19 +64,24 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
         invoice = self.get_object()
 
-        pdf = generate_invoice_pdf(invoice)
+        pdf_content = generate_invoice_pdf(
+            invoice
+        )
 
         send_invoice_email(
             invoice.customer.email,
             invoice.invoice_number,
-            pdf,
+            pdf_content,
         )
 
-        invoice.status = InvoiceStatus.SENT
-        invoice.save()
+        if invoice.status == InvoiceStatus.DRAFT:
+            invoice.status = InvoiceStatus.SENT
+            invoice.save()
 
         return Response(
             {
                 "message": "Invoice sent successfully."
             }
         )
+    
+    
